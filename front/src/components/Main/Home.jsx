@@ -57,7 +57,7 @@ const Home = () => {
 
         // Actualiza el estado con los datos del gráfico
         setChartData(chartData);
-
+        console.log("se logró");
         // Muestra el gráfico
         setMostrarGrafico(true);
       })
@@ -65,10 +65,11 @@ const Home = () => {
         console.error("Error al enviar datos a la API:", error);
       });
   };
+
   return (
     <>
       {mostrarGrafico ? (
-        <PlaneCartesian chartData={chartData} />
+        <PlaneCartesian />
       ) : (
         <form
           className="flex justify-center gap-6  items-center w-full flex-col sm:flex-row sm:items-start "
@@ -157,7 +158,7 @@ const Home = () => {
       <div className="flex items-center justify-center w-full ">
         {mostrarGrafico ? (
           <div className="w-11/12 h-96 bg-opacity-70 bg-black p-6 rounded-xl  sm:w-1/2">
-            <PlaneCartesian barras={3}></PlaneCartesian>
+            <PlaneCartesian barras={3} chartData={chartData}></PlaneCartesian>
           </div>
         ) : (
           <div className="w-48 text-center m-auto ">
@@ -182,7 +183,6 @@ const Home = () => {
           onClick={() => {
             setborrar(true);
             setMostrarGrafico(false);
-
           }}
           className="bg-red-500 p-3 rounded-2xl hover:bg-red-900 duration-500 w-fit shadow-2xl "
         >
