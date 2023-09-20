@@ -13,12 +13,12 @@ const Inputs = ({ placeholder, label, borrar, setborrar, value, setValue }) => {
     const inputValue = e.target.value;
     if (/^\d*\.?\d*$/.test(inputValue)) {
       setValue(inputValue);
-      setborrar(e.target.value === "");
+      setborrar(false);
     }
   };
 
   return (
-    <div className="gap-5 flex items-start justify-start h-fit p-1 box-content">
+    <div className="gap-5 flex items-start justify-start h-fit p-1 box-content sm:flex-row">
       <input
         type="text"
         inputMode="numeric"

@@ -22,146 +22,174 @@ const Home = () => {
   };
 
   const enviarDatos = () => {
-    const postData = {
-      op: "maximizar",
-      x1: parseFloat(valor1),
-      x2: parseFloat(valor2),
-      x1j1: parseFloat(restriccion11),
-      x1j2: parseFloat(restriccion12),
-      x2j1: parseFloat(restriccion21),
-      x2j2: parseFloat(restriccion22),
-      r1: parseFloat(numLimite1),
-      r2: parseFloat(numLimite2),
-    };
+    // Verifica si los valores no son nulos o indefinidos antes de enviar la solicitud
+    if (
+      valor1 &&
+      valor2 &&
+      restriccion11 &&
+      restriccion12 &&
+      restriccion21 &&
+      restriccion22 &&
+      numLimite1 &&
+      numLimite2
+    ) {
+      const postData = {
+        op: "maximizar",
+        x1: parseFloat(valor1),
+        x2: parseFloat(valor2),
+        x1j1: parseFloat(restriccion11),
+        x1j2: parseFloat(restriccion12),
+        x2j1: parseFloat(restriccion21),
+        x2j2: parseFloat(restriccion22),
+        r1: parseFloat(numLimite1),
+        r2: parseFloat(numLimite2),
+      };
 
-    fetch("http://127.0.0.1:8000/api/calculator/solve/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle the response data here
-        console.log("Respuesta de la API:", data);
-
-        // Formatea los datos para el gráfico
-        const chartData = data.resultados.Punto.map((punto, index) => ({
-          Punto: punto,
-          "Coordenada X (X1)": data.resultados["Coordenada X (X1)"][index],
-          "Coordenada Y (X2)": data.resultados["Coordenada Y (X2)"][index],
-          "Valor de la función objetivo (Z)":
-            data.resultados["Valor de la función objetivo (Z)"][index],
-        }));
-
-        // Actualiza el estado con los datos del gráfico
-        setChartData(chartData);
-        console.log("se logró");
-        // Muestra el gráfico
-        setMostrarGrafico(true);
+      fetch("http://127.0.0.1:8000/api/calculator/solve/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
       })
-      .catch((error) => {
-        console.error("Error al enviar datos a la API:", error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle the response data here
+          console.log("Respuesta de la API:", data);
+
+          // Formatea los datos para el gráfico
+          const chartData = data.resultados.Punto.map((punto, index) => ({
+            Punto: punto,
+            "Coordenada X (X1)": data.resultados["Coordenada X (X1)"][index],
+            "Coordenada Y (X2)": data.resultados["Coordenada Y (X2)"][index],
+            "Valor de la función objetivo (Z)":
+              data.resultados["Valor de la función objetivo (Z)"][index],
+          }));
+
+          // Actualiza el estado con los datos del gráfico
+          setChartData(chartData);
+
+          // Muestra el gráfico
+          setMostrarGrafico(true);
+        })
+        .catch((error) => {
+          console.error("Error al enviar datos a la API:", error);
+        });
+    } else {
+      // Alguno de los valores es nulo o indefinido, muestra un mensaje de error o maneja la situación de otra manera
+      console.error("Alguno de los valores es nulo o indefinido.");
+    }
   };
 
   return (
     <>
-      {mostrarGrafico ? (
-        <PlaneCartesian />
-      ) : (
-        <form
-          className="flex justify-center gap-6  items-center w-full flex-col sm:flex-row sm:items-start "
-          onSubmit={manejarEnvio}
-        >
-          <div className="flex items-center justify-center h-full">
-            <SelectBox borrar={borrar} setborrar={setborrar}></SelectBox>
-          </div>
+      <form
+        className=" flex items-center gap-9  scale-100 sm:scale-[0.85] sm:flex-row flex-col mb-6 "
+        onSubmit={manejarEnvio}
+      >
+        <div className="flex items-center justify-center h-full">
+          <SelectBox borrar={borrar} setborrar={setborrar}></SelectBox>
+        </div>
+        <div className="flex items-center justify-center gap-4 flex-col">
+          <h1 className="text-white">Variables</h1>
+          <Inputs
+            placeholder={"X1"}
+            label={"X1"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={valor1}
+            setValue={setValor1}
+          ></Inputs>
+          <Inputs
+            placeholder={"X2"}
+            label={"X2"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={valor2}
+            setValue={setValor2}
+          ></Inputs>
+        </div>
+        <div className="flex items-center justify-center gap-4 flex-col">
+          <h1 className="text-white">Restricción Uno</h1>
+          <Inputs
+            placeholder={"X1"}
+            label={"X1"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={restriccion11}
+            setValue={setRestriccion11}
+          ></Inputs>
+          <Inputs
+            placeholder={"X2"}
+            label={"X2"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={restriccion12}
+            setValue={setRestriccion12}
+          ></Inputs>
+          <Inputs
+            placeholder={"X2"}
+            label={"Número Limite"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={numLimite1}
+            setValue={setnumLimite1}
+          ></Inputs>
+        </div>
+        <div className="flex items-center justify-center gap-4 flex-col">
+          <h1 className="text-white">Restricción Dos</h1>
+          <Inputs
+            placeholder={"X1"}
+            label={"X1"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={restriccion21}
+            setValue={setRestriccion21}
+          ></Inputs>
+          <Inputs
+            placeholder={"X2"}
+            label={"X2"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={restriccion22}
+            setValue={setRestriccion22}
+          ></Inputs>
+          <Inputs
+            placeholder={"X2"}
+            label={"Número Limite"}
+            borrar={borrar}
+            setborrar={setborrar}
+            value={numLimite2}
+            setValue={setnumLimite2}
+          ></Inputs>
+        </div>{" "}
+        <div className="flex gap-3 w-full justify-center flex-row items-center sm:flex-col">
+          <button
+            onClick={enviarDatos}
+            className="bg-blue-500 p-3 rounded-2xl hover:bg-blue-900 duration-500 w-fit shadow-2xl "
+          >
+            Evaluar
+          </button>
 
-          <div className="flex items-center justify-center gap-4 flex-col">
-            <h1 className="text-white">Variables</h1>
-            <Inputs
-              placeholder={"X1"}
-              label={"X1"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={valor1}
-              setValue={setValor1}
-            ></Inputs>
-            <Inputs
-              placeholder={"X2"}
-              label={"X2"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={valor2}
-              setValue={setValor2}
-            ></Inputs>
-          </div>
-          <div className="flex items-center justify-center gap-4 flex-col">
-            <h1 className="text-white">Restricción Uno</h1>
-            <Inputs
-              placeholder={"X1"}
-              label={"X1"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={restriccion11}
-              setValue={setRestriccion11}
-            ></Inputs>
-            <Inputs
-              placeholder={"X2"}
-              label={"X2"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={restriccion12}
-              setValue={setRestriccion12}
-            ></Inputs>
-            <Inputs
-              placeholder={"X2"}
-              label={"Número Limite"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={numLimite1}
-              setValue={setnumLimite1}
-            ></Inputs>
-          </div>
-          <div className="flex items-center justify-center gap-4 flex-col">
-            <h1 className="text-white">Restricción Dos</h1>
-            <Inputs
-              placeholder={"X1"}
-              label={"X1"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={restriccion21}
-              setValue={setRestriccion21}
-            ></Inputs>
-            <Inputs
-              placeholder={"X2"}
-              label={"X2"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={restriccion22}
-              setValue={setRestriccion22}
-            ></Inputs>
-            <Inputs
-              placeholder={"X2"}
-              label={"Número Limite"}
-              borrar={borrar}
-              setborrar={setborrar}
-              value={numLimite2}
-              setValue={setnumLimite2}
-            ></Inputs>
-          </div>
-        </form>
-      )}
+          <button
+            onClick={() => {
+              setborrar(true);
+              setMostrarGrafico(false);
+            }}
+            className="bg-red-500 p-3 rounded-2xl hover:bg-red-900 duration-500 w-fit shadow-2xl "
+          >
+            Borrar
+          </button>
+        </div>
+      </form>
 
       <div className="flex items-center justify-center w-full ">
         {mostrarGrafico ? (
-          <div className="w-11/12 h-96 bg-opacity-70 bg-black p-6 rounded-xl  sm:w-1/2">
+          <div className="w-4/12 h-96 bg-opacity-70 bg-black p-6 rounded-xl  sm:w-1/2">
             <PlaneCartesian barras={3} chartData={chartData}></PlaneCartesian>
           </div>
         ) : (
-          <div className="w-48 text-center m-auto ">
+          <div className="w-48 text-center m-auto h-96 ">
             <img
               src="./pablo.webp"
               alt=""
@@ -170,24 +198,6 @@ const Home = () => {
             <label className="text-white ">Sospechoso</label>
           </div>
         )}
-      </div>
-      <div className="flex gap-3 w-full justify-center">
-        <button
-          onClick={enviarDatos}
-          className="bg-blue-500 p-3 rounded-2xl hover:bg-blue-900 duration-500 w-fit shadow-2xl "
-        >
-          Evaluar
-        </button>
-        -{" "}
-        <button
-          onClick={() => {
-            setborrar(true);
-            setMostrarGrafico(false);
-          }}
-          className="bg-red-500 p-3 rounded-2xl hover:bg-red-900 duration-500 w-fit shadow-2xl "
-        >
-          Borrar
-        </button>
       </div>
     </>
   );

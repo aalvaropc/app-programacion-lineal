@@ -69,7 +69,7 @@ function App() {
   return (
     <div className="h-screen flex flex-col justify-between">
       <Header></Header>
-      <div className="flex-col items-center flex gap-8 pt-6 ">
+      <div className="flex-col items-center flex pt-6 ">
         <Home></Home>
       </div>
       <Footer></Footer>
