@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="h-screen flex flex-col justify-between">
       <Header></Header>
-      <div className="flex-col items-center flex gap-8 pt-6 ">
+      <div className="flex-col items-center flex gap-8 pt-6 flex-wrap scale-100 sm:scale-90 ">
         <Home></Home>
       </div>
       <Footer></Footer>
