@@ -8,6 +8,7 @@ class LinearProgrammingView(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
+        print(data)
 
         op = data.get('op')
         x1 = data.get('x1')
@@ -45,5 +46,5 @@ class LinearProgrammingView(APIView):
                 "Valor de la función objetivo (Z)": [z_O, z_A, z_B, z_C, z_D]
             }
         }
-
+        print(resultados)
         return Response(resultados, status=status.HTTP_200_OK)
