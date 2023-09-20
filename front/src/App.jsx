@@ -70,11 +70,7 @@ function App() {
     <div className="h-screen flex flex-col justify-between">
       <Header></Header>
       <div className="flex-col items-center flex gap-8 pt-6 ">
-        <Home
-          postData={postData}
-          setPostData={setPostData}
-          response={response}
-        ></Home>
+        <Home></Home>
       </div>
       <Footer></Footer>
     </div>

@@ -71,7 +71,7 @@ const Home = () => {
         <PlaneCartesian chartData={chartData} />
       ) : (
         <form
-          className="flex justify-center gap-6 flex-wrap items-start w-full "
+          className="flex justify-center gap-6  items-center w-full flex-col sm:flex-row sm:items-start "
           onSubmit={manejarEnvio}
         >
           <div className="flex items-center justify-center h-full">
@@ -156,7 +156,7 @@ const Home = () => {
 
       <div className="flex items-center justify-center w-full ">
         {mostrarGrafico ? (
-          <div className="w-1/2 h-96 bg-opacity-70 bg-black p-6 rounded-xl ">
+          <div className="w-11/12 h-96 bg-opacity-70 bg-black p-6 rounded-xl  sm:w-1/2">
             <PlaneCartesian barras={3}></PlaneCartesian>
           </div>
         ) : (
