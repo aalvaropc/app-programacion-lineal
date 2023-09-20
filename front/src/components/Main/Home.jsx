@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-
 import PlaneCartesian from "../Graphics/PlaneCartesian";
 import Inputs from "./MicroComponents/Inputs";
 import SelectBox from "./MicroComponents/SelectBox";
 
 const Home = () => {
-  const [mostrarGrafico, setmostrarGrafico] = useState(false);
+  // const [mostrarGrafico, setmostrarGrafico] = useState(false);
+  const [mostrarGrafico, setMostrarGrafico] = useState(false);
   const [borrar, setborrar] = useState(false);
   const [valor1, setValor1] = useState("");
   const [valor2, setValor2] = useState("");
@@ -15,18 +15,60 @@ const Home = () => {
   const [restriccion21, setRestriccion21] = useState("");
   const [restriccion22, setRestriccion22] = useState("");
   const [numLimite2, setnumLimite2] = useState("");
+  const [chartData, setChartData] = useState(null);
+
   const manejarEnvio = (e) => {
     e.preventDefault();
   };
+
   const enviarDatos = () => {
-    setmostrarGrafico(true);
-    console.log(valor1, "valor1 ");
-    console.log(valor2, "valor 2 ");
+    const postData = {
+      op: "maximizar",
+      x1: parseFloat(valor1),
+      x2: parseFloat(valor2),
+      x1j1: parseFloat(restriccion11),
+      x1j2: parseFloat(restriccion12),
+      x2j1: parseFloat(restriccion21),
+      x2j2: parseFloat(restriccion22),
+      r1: parseFloat(numLimite1),
+      r2: parseFloat(numLimite2),
+    };
+
+    fetch("http://127.0.0.1:8000/api/calculator/solve/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response data here
+        console.log("Respuesta de la API:", data);
+
+        // Formatea los datos para el gráfico
+        const chartData = data.resultados.Punto.map((punto, index) => ({
+          Punto: punto,
+          "Coordenada X (X1)": data.resultados["Coordenada X (X1)"][index],
+          "Coordenada Y (X2)": data.resultados["Coordenada Y (X2)"][index],
+          "Valor de la función objetivo (Z)":
+            data.resultados["Valor de la función objetivo (Z)"][index],
+        }));
+
+        // Actualiza el estado con los datos del gráfico
+        setChartData(chartData);
+
+        // Muestra el gráfico
+        setMostrarGrafico(true);
+      })
+      .catch((error) => {
+        console.error("Error al enviar datos a la API:", error);
+      });
   };
   return (
     <>
       {mostrarGrafico ? (
-        <> </>
+        <PlaneCartesian chartData={chartData} />
       ) : (
         <form
           className="flex justify-center gap-6 flex-wrap items-start w-full "
@@ -139,7 +181,8 @@ const Home = () => {
         <button
           onClick={() => {
             setborrar(true);
-            setmostrarGrafico(false);
+            setMostrarGrafico(false);
+
           }}
           className="bg-red-500 p-3 rounded-2xl hover:bg-red-900 duration-500 w-fit shadow-2xl "
         >
